@@ -1,0 +1,188 @@
+from tkinter import *
+from tkinter.messagebox import *
+from bus_reservation.busmemberDB import *
+from bus_reservation.loginUI import *
+
+
+global uid
+
+wp = None
+uid_input, pw_input, pwcheck_input, name_input, birth_input, tel_input, email_input= None, None, None, None, None, None, None
+
+
+# == 마이페이지 : 회원수정 및 삭제 ===========================
+
+def login_info1(uid):
+    global result
+#     print("정보 검색 시작..")
+    #1. db연동해서 결과 받아오는 함수 호출
+    result = db_memberSelectall(uid)
+    #2. 받아온 결과를 UI에 전달.
+#     print(result)
+    infoUpdate_window(result)
+    
+
+def infoUpdate_process():
+    global uid_input, pw_input, pwcheck_input, name_input, birth_input, tel_input, email_input
+
+    uidtext = uid_input.get()   #uid
+    pw = pw_input.get()
+    pwcheck = pwcheck_input.get()
+    name = name_input.get()
+    birth = int(birth_input.get())
+    tel = tel_input.get()
+    email = email_input.get()
+    
+    if pw == pwcheck:
+        db_memberUpdate(uidtext, pw, pwcheck, name, birth, tel, email)
+        showinfo("회원정보수정", "수정완료...!!")
+    else:
+        showinfo("비밀번호 확인", "비밀번호를 다시 확인해주세요!")    
+
+def infoUpdate_window(result):
+    global uid_input, pw_input, pwcheck_input, name_input, birth_input, tel_input, email_input, wp
+
+    frame = Frame(wp, relief="solid", bd=1)
+    frame.place(x = 200, y = 20, w = 450, h = 560)
+    
+#     print(result)
+    
+    cId = StringVar(frame, value = result[0][0])
+    cPw = StringVar(frame, value = result[0][1])
+    cPwcheck = StringVar(frame, value = result[0][2])
+    cName = StringVar(frame, value = result[0][3])
+    cBirth = IntVar(frame, value = result[0][4])
+    cTel = StringVar(frame, value = result[0][5])
+    cEmail = StringVar(frame, value = result[0][6])
+
+    text_title = Label(frame, text="=회원 정보 수정=", font=("궁서",20))
+    
+    uid_text = Label(frame, text = "아이디 :", font=("궁서",20))
+    pw_text = Label(frame, text = "비밀번호:", font=("궁서",20))
+    pwcheck_text = Label(frame, text = "비밀번호확인:", font=("궁서",20))
+    name_text = Label(frame, text = "이름:", font=("궁서",20))
+    birth_text = Label(frame, text = "생일(6자리):", font=("궁서",20))
+    tel_text = Label(frame, text = "전화번호:", font=("궁서",20))
+    email_text = Label(frame, text = "이메일 주소:", font=("궁서",20))
+     
+    uid_input = Entry(frame, textvariable = cId, state = "disabled", font=("궁서",20), bg="skyblue", width=12)
+    pw_input = Entry(frame, textvariable = cPw, font=("궁서",20), bg="skyblue", width=12)
+    pwcheck_input = Entry(frame, textvariable = cPwcheck, font=("궁서",20), bg="skyblue", width=12)
+    name_input = Entry(frame, textvariable = cName, state='disabled', font=("궁서",20), bg="skyblue", width=12)
+    birth_input = Entry(frame, textvariable = cBirth, font=("궁서",20), bg="skyblue", width=12)
+    tel_input = Entry(frame, textvariable = cTel, font=("궁서",20), bg="skyblue", width=12)
+    email_input = Entry(frame, textvariable = cEmail, font=("궁서",20), bg="skyblue", width=12)
+    
+    infoUpdate = Button(frame, text="수정완료", font=("궁서",20), bg = 'white', command = infoUpdate_process)
+    
+    text_title.place(x = 50, y = 30)
+     
+    uid_text.place(x = 20, y = 100)
+    pw_text.place(x = 20, y = 150)
+    pwcheck_text.place(x = 20, y = 200)
+    name_text.place(x = 20, y = 250)
+    birth_text.place(x = 20, y = 300)
+    tel_text.place(x = 20, y = 350)
+    email_text.place(x = 20, y = 400)
+    
+    uid_input.place(x = 210, y = 100)
+    pw_input.place(x = 210, y = 150)
+    pwcheck_input.place(x = 210, y = 200)
+    name_input.place(x = 210, y = 250)
+    birth_input.place(x = 210, y = 300)
+    tel_input.place(x = 210, y = 350)
+    email_input.place(x = 210, y = 400)
+    
+    infoUpdate.place(x = 210, y = 470)
+
+
+def main_call():
+    import bus_reservation.busMainUI
+    global wp
+    wp.destroy()
+    bus_reservation.busMainUI.bus_Main()
+
+def login_info2(uid):
+    global delresult
+#     print("정보 검색 시작..")
+    #1. db연동해서 결과 받아오는 함수 호출
+    delresult = db_memberSelectpd(uid)
+    #2. 받아온 결과를 UI에 전달.
+    infoDelete_window(delresult)
+#     print(uid)
+#     print(delresult)
+#     print(delresult[0][0])
+#     print(delresult[0][1])
+
+def infoDelete_process():
+    global uid_input, pw_input
+    
+#     print("회원 정보 삭제 완료!")
+    
+    uid = uid_input.get()
+    pw = pw_input.get()
+    
+    db_memberDelete(uid, pw)
+    
+    showinfo("회원탈퇴", "회원탈퇴완료...")
+
+    main_call()
+
+def infoDelete_window(delresult):
+    global uid_input, pw_input, wp
+    
+    frame2 = Frame(wp, relief="solid", bd=1)
+    frame2.place(x = 200, y = 20, w = 450, h = 560)
+    
+    cId = StringVar(frame2, value = delresult[0][0])
+    cPw = StringVar(frame2, value = delresult[0][1])
+    
+    text_title = Label(frame2, text="=회원 탈퇴=", font=("궁서",20))
+    text_title.place(x = 50, y = 30)
+    
+    uid_text = Label(frame2, text = "아이디 :", font=("궁서",20))
+    pw_text = Label(frame2, text = "비밀번호:", font=("궁서",20))
+    uid_text.place(x = 20, y = 100)
+    pw_text.place(x = 20, y = 150)
+    
+    uid_input = Entry(frame2, textvariable = cId, state = "disabled", font=("궁서",20), bg="skyblue", width=12)
+    pw_input = Entry(frame2, textvariable = cPw, font=("궁서",20), bg="skyblue", width=12)
+    
+    uid_input.place(x = 210, y = 100)
+    pw_input.place(x = 210, y = 150)
+
+    text_delete = Label(frame2, text="회원 탈퇴 하시겠습니까?", font=("궁서",20), fg = "red")
+    text_delete.place(x = 20, y = 400)
+    
+    infoDelete = Button(frame2, text="회원탈퇴", font=("궁서",20), bg = 'white', command = infoDelete_process)
+    infoDelete.place(x = 210, y = 470)
+
+def back_info(uid):
+    import bus_reservation.boardMainUI
+    wp.destroy()
+    bus_reservation.boardMainUI.ui_boardMain(uid)
+
+def ui_mypage(uid):
+    global uid_input, pw_input, pwcheck_input, name_input, birth_input, tel_input, email_input, wp
+
+    wp = Tk()
+    wp.geometry("700x600")
+    wp.title("My page")
+ 
+    total = Frame(wp, relief="solid", bd=2)
+    total.pack(side=TOP, fill="both", expand = True, padx=5, pady=5)
+
+      
+    text_title = Label(wp, text="마이페이지", font=("궁서",20))
+    infoUpdate = Button(wp, text="정보수정", font=("궁서",20), bg = 'white', activeforeground = 'red', activebackground = 'pink', command=lambda:login_info1(uid))
+    infoDelete = Button(wp, text="회원탈퇴", font=("궁서",20), bg = 'white', activeforeground = 'red', activebackground = 'pink', command=lambda:login_info2(uid))
+    infoback = Button(wp, text="뒤로가기", font=("궁서",20), bg = 'white', activeforeground = 'red', activebackground = 'pink', command=lambda:back_info(uid))
+    
+    text_title.place(x = 30, y = 20)
+    infoUpdate.place(x = 30, y = 145)
+    infoDelete.place(x = 30, y = 200)
+    infoback.place(x = 30, y = 255)
+    
+
+    wp.mainloop()
+    
