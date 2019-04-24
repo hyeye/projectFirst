@@ -1,0 +1,38 @@
+from tkinter import *
+from tkinter.messagebox import *
+from bus_reservation.boardMainUI import *
+from bus_reservation.loginUI import *
+from bus_reservation.busMainUI import *
+from project.bus_mod import *
+from project.bus_Ticket import *
+
+global uid
+
+w1 = None
+#==버스예매
+def busticket(uid):
+    ui.setupUi(Window)
+    main(uid)
+    Window.show()
+
+def busmod(uid):
+    ui3.setupUi(MainWindow)   
+    table(uid)
+    MainWindow.show()
+    
+
+# ==로그인 메인
+def logout_messagebox():
+    global w1
+    showinfo("로그아웃", "로그아웃되었습니다.")
+    w1.destroy()
+    bus_Main()
+
+def board_process(uid):
+    
+    ui_boardMain(uid)
+
+def ui_loginMain(uid):
+#     print(uid)
+    global w1
+    w1 = Tk()
