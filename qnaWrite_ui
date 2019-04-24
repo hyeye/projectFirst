@@ -1,0 +1,78 @@
+from tkinter import *
+from tkinter.messagebox import *
+from bus_reservation.boardDB import *
+# from bus_reservation.qnaboardUI import *
+# from bus_reservation.qnaboardUI2 import *
+
+global uid
+
+title_input, content_input, bpw_input = None, None, None
+
+wqi = None
+# ==게시판 글쓰기 ======================
+
+def qnaInsert_finish(uid):
+    import bus_reservation.qnaboardUI
+    global wqi
+    showinfo("%s님 글쓰기 완료"%uid, "글쓰기 완료->목록으로 가기")
+    wqi.destroy()
+    bus_reservation.qnaboardUI.ui_qnaboardList(uid)
+
+
+def qnaInsert_process(uid):
+    global title_input, content_input, bpw_input, wqi
+    
+    title = title_input.get()
+    content = content_input.get()
+    a = uid
+    writer = a
+    uid = writer
+    bpw = bpw_input.get()
+    
+    db_boardInsert(title, content, writer, bpw)
+    
+    qnaInsert_finish(uid)
+
+
+    
+
+def ui_qnaboardInsert(uid):
+    global title_input, content_input, bpw_input, wqi
+    
+    wqi = Tk()
+    wqi.geometry("700x600")
+    wqi.title("게시판 글쓰기")
+    
+    total = Frame(wqi, relief="solid", bd=2)
+    total.pack(side=TOP, fill="both", expand = True, padx=5, pady=5)
+    
+    text_title = Label(wqi, text="제목", font=("궁서",20))
+    text_title.place(x = 40, y = 50)
+    
+    title = Frame(wqi, relief="solid", bd=1)
+    title.place(x = 200, y = 40, w = 450, h = 50)
+    title_input = Entry(wqi, font=("궁서",20), width=12)
+    title_input.place(x = 200, y = 40, w = 450, h = 50)
+    
+    text_content = Label(wqi, text="내용", font=("궁서",20))
+    text_content.place(x = 40, y = 110)
+    
+    content = Frame(wqi, relief="solid", bd=1)
+    content.place(x = 200, y = 110, w = 450, h = 300)
+    content_input = Entry(wqi, font=("궁서",20), width=12)
+    content_input.place(x = 200, y = 110, w = 450, h = 300)
+    
+    text_bpw = Label(wqi, text="비밀번호", font=("궁서",20))
+    text_bpw.place(x = 40, y = 430)
+    
+    bpw = Frame(wqi, relief="solid", bd=1)
+    bpw.place(x = 200, y = 430, w = 450, h = 50)
+    bpw_input = Entry(wqi, font=("궁서",20), width=12)
+    bpw_input.place(x = 200, y = 430, w = 450, h = 50)
+    
+    
+    insert = Button(wqi, text="등록", font=("궁서",20), bg = 'white', command=lambda:qnaInsert_process(uid))
+    insert.place(x = 300, y = 500)
+    
+    wqi.mainloop()
+
