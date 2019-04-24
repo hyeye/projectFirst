@@ -1,0 +1,45 @@
+from tkinter import *
+from tkinter.messagebox import *
+# from bus_reservation.loginUI import *
+
+w = None
+
+
+def board_message():
+    showinfo("로그인 여부", "로그인 하세요..!!")
+    
+def destroy_busMain():
+    import bus_reservation.loginUI
+    
+    global w
+    w.destroy()
+    bus_reservation.loginUI.ui_login()
+    
+def bus_Main():
+    global w
+
+    w = Tk()
+    w.geometry("400x400")
+    w.title("고속 버스 예매 시스템")
+    
+    icon = PhotoImage(file = "busimg.PNG")
+    label = Label(image = icon)
+    label.image = icon
+    
+    text_title = Label(w, text="고속 버스 예매 시스템", font=("궁서",20), fg="red")
+    
+    login = Button(w, text="로그인", font=("궁서",20), bg = 'white', command = destroy_busMain)
+    info = Button(w, text="이용안내/문의", font=("궁서",20), bg = 'white', command = board_message)
+
+    text_title.place(x = 50, y = 35)
+    
+    label.place(x = 20, y = 85)
+
+    login.place(x = 20, y = 300, w = 160, h = 50)
+    info.place(x = 195, y = 300, w = 180, h = 50)
+
+    w.mainloop()
+    
+if __name__ == '__main__':
+
+    bus_Main()
