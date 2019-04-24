@@ -1,0 +1,123 @@
+import pymysql
+
+con = None
+
+global number, title, content, writer, writedate, bpw
+
+
+# 게시판 글쓰기 누를때 사용
+def db_boardInsert(title, content, writer, bpw):
+    # number, title, content, writer, bpw, writedate
+    con = pymysql.connect(host = 'localhost', user = 'root', password = '1234', db = 'busreservation')
+    cur = con.cursor()
+    sql = "insert into board values (null, '%s', '%s', '%s', '%s' ,now())"%(title, content, writer, bpw)
+    cur.execute(sql)
+    con.commit()
+    con.close()
+    
+
+# 게시판 글 삭제시 사용
+def db_boardDelete(bpw):
+
+    con = pymysql.connect(host = 'localhost', user = 'root', password = '1234', db = 'busreservation')
+    cur = con.cursor()
+    sql = "delete from board where bpw = '%s'"%(bpw)
+    cur.execute(sql)
+    con.commit()
+    con.close()
+    
+    
+# 게시판 글 수정시 사용
+def db_boardUpdate(title, content, bpw):
+    
+    con = pymysql.connect(host = 'localhost', user = 'root', password = '1234', db = 'busreservation')
+    cur = con.cursor()
+    sql = "update board set title = '%s', content = '%s' where bpw = '%s'"%(title, content, bpw)
+    cur.execute(sql)
+    con.commit()
+    con.close()
+
+
+# 게시판 제목으로 검색시  사용   
+def db_boardSelectTitle(title):
+
+    con = pymysql.connect(host = 'localhost', user = 'root', password = '1234', db = 'busreservation')
+    cur = con.cursor()
+    sql = "select * from board where title like '%{}%'".format(title)
+    cur.execute(sql) 
+    record = cur.fetchone()
+    return record
+    con.close()
+
+
+# 게시판 내용으로 검색시  사용   
+def db_boardSelectContent(content):
+
+    con = pymysql.connect(host = 'localhost', user = 'root', password = '1234', db = 'busreservation')
+    cur = con.cursor()
+    sql = "select * from board where content like '%{}%'".format(content)
+    cur.execute(sql) 
+    record = cur.fetchone()
+    return record
+    con.close()
+    
+
+# 게시판 작성자로 검색시  사용   
+def db_boardSelectWriter(writer):
+
+    con = pymysql.connect(host = 'localhost', user = 'root', password = '1234', db = 'busreservation')
+    cur = con.cursor()
+    sql = "select * from board where writer like '%{}%'".format(writer)
+    cur.execute(sql) 
+    record = cur.fetchone()
+    return record
+    con.close()
+
+
+#게시판 전체목록 불러오기
+def db_boardSelectList():
+    con = pymysql.connect(host = 'localhost', user = 'root', password = '1234', db = 'busreservation')
+    cur = con.cursor()
+    sql = "select number, title, writer, writedate from board"
+    n = cur.execute(sql)
+#     con.commit()
+    
+    Allresult = []
+    
+    while True:
+        record = cur.fetchone()
+        if record == None:
+            break
+        else:
+#             print(record)
+            Allresult.append(record)
+    
+#     print(Allresult)
+
+    con.close()
+
+    return Allresult
+
+# 게시판 수정할 때 목록 불러오기
+def db_boardSelectall(writer):
+    con = pymysql.connect(host = 'localhost', user = 'root', password = '1234', db = 'busreservation')
+    cur = con.cursor()
+    sql = "select title, content, bpw from board where writer = '%s'" % writer
+    n = cur.execute(sql)
+#     con.commit()
+    
+    Uptresult = []
+    
+    while True:
+        record = cur.fetchone()
+        if record == None:
+            break
+        else:
+#             print(record)
+            Uptresult.append(record)
+    
+    print(Uptresult)
+
+    con.close()
+
+    return Uptresult
