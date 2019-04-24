@@ -20,7 +20,6 @@ def destroy_boardMain(uid):
 def destroy_boardMain2(uid):
     global w2
     w2.destroy()
-#     qnaList(uid)
     ui_qnaboardList(uid)
 
 def ui_boardMain(uid):
