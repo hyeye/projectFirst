@@ -1,0 +1,185 @@
+from tkinter import *
+from tkinter.messagebox import *
+from bus_reservation.busmemberDB import *
+
+uid_input, pw_input, pwcheck_input, name_input, birth_input, tel_input, email_input = None, None, None, None, None, None, None
+
+idname_input, idemail_input, idrecord = None, None, None
+
+pwuid_input, pwemail_input, pwrecord = None, None, None
+
+wm , pw , wi = None, None, None
+
+# ==회원가입==========================
+def membership_process():
+    global uid_input, pw_input, pwcheck_input, name_input, birth_input, tel_input, email_input, wm
+#     print("회원가입 완료!")
+
+    uid = uid_input.get()
+    pw = pw_input.get()
+    pwcheck = pwcheck_input.get()
+    name = name_input.get()
+    birth = int(birth_input.get())
+    tel = tel_input.get()
+    email = email_input.get()
+    
+    if pw == pwcheck:
+        db_memberInsert(uid, pw, pwcheck, name, birth, tel, email)
+    
+        showinfo("회원가입", "회원가입완료!!")
+        wm.destroy()
+    
+    else:
+        showinfo("비밀번호 확인", "비밀번호를 다시 확인해주세요!")
+
+def IDcheck_process():
+    global IDresult
+    
+    uidCheck = uid_input.get()
+    
+    IDresult = db_IDcheck()
+#     print(len(IDresult))
+#     print(IDresult)
+    
+    IDcheck_list = []
+    
+    for record in IDresult:
+#         print(record)
+#         print(record[0])
+        IDcheck_list.append(record[0])
+#     print(IDcheck_list)
+    
+    if uidCheck == '':
+        showinfo("아이디 중복확인", "아이디를 입력해주세요.")  
+    elif uidCheck in IDcheck_list:
+#         print("이미존재하는아이디")
+        showinfo("아이디 중복확인", "이미 존재하는 아이디 입니다.")
+    else:
+#         print("사용가능아이디")
+        showinfo("아이디 중복확인", "사용가능한 아이디 입니다.")
+
+    
+def ui_membership():
+    global uid_input, pw_input, pwcheck_input, name_input, birth_input, tel_input, email_input, wm
+    wm = Tk()
+    wm.geometry("550x600")
+    wm.title("회원가입")
+    
+    text_title = Label(wm, text="회원가입", font=("궁서",20))
+    
+    uid_text = Label(wm, text = "아이디 :", font=("궁서",20))
+    pw_text = Label(wm, text = "비밀번호:", font=("궁서",20))
+    pwcheck_text = Label(wm, text = "비밀번호확인:", font=("궁서",20))
+    name_text = Label(wm, text = "이름:", font=("궁서",20))
+    birth_text = Label(wm, text = "생일:", font=("궁서",20))
+    tel_text = Label(wm, text = "전화번호:", font=("궁서",20))
+    email_text = Label(wm, text = "이메일 주소:", font=("궁서",20))
+    
+    uid_input = Entry(wm, font=("궁서",20), bg="skyblue", width=12)
+    pw_input = Entry(wm, font=("궁서",20), bg="skyblue", width=12)
+    pwcheck_input = Entry(wm, font=("궁서",20), bg="skyblue", width=12)
+    name_input = Entry(wm, font=("궁서",20), bg="skyblue", width=12)
+    birth_input = Entry(wm, font=("궁서",20), bg="skyblue", width=12)
+    tel_input = Entry(wm, font=("궁서",20), bg="skyblue", width=12)
+    email_input = Entry(wm, font=("궁서",20), bg="skyblue", width=12)
+    
+    IDcheck = Button(wm, text="중복확인", font=("궁서",20), bg = 'white', command = IDcheck_process)
+    membership = Button(wm, text="회원가입 완료", font=("궁서",20), bg = 'white', command = membership_process)
+    
+    text_title.pack(fill = X, ipadx = 10, ipady = 10)
+    
+    uid_text.place(x = 20, y = 100)
+    pw_text.place(x = 20, y = 150)
+    pwcheck_text.place(x = 20, y = 200)
+    name_text.place(x = 20, y = 250)
+    birth_text.place(x = 20, y = 300)
+    tel_text.place(x = 20, y = 350)
+    email_text.place(x = 20, y = 400)
+    
+    uid_input.place(x = 210, y = 100)
+    pw_input.place(x = 210, y = 150)
+    pwcheck_input.place(x = 210, y = 200)
+    name_input.place(x = 210, y = 250)
+    birth_input.place(x = 210, y = 300)
+    tel_input.place(x = 210, y = 350)
+    email_input.place(x = 210, y = 400)
+    
+    IDcheck.place(x = 420, y = 100, w = 110, h = 40)
+    membership.place(x = 220, y = 500, w = 180, h = 40)
+
+
+    wm.mainloop()
+
+
+#==아이디 찾기 ====================
+def IDsearch_process():
+    global idname_input, idemail_input, idrecord, wi
+    name = idname_input.get()
+    email = idemail_input.get()
+    
+    idrecord = db_memberSelectID(name, email)
+    
+    showinfo("아이디찾기", "아이디는 {} 입니다.".format(idrecord[0]))
+    wi.destroy()
+
+def ui_IDsearch():
+    global idname_input, idemail_input, wi
+    wi = Tk()
+    wi.geometry("450x300")
+    wi.title("아이디 찾기")
+
+    idname_text = Label(wi, text = "이         름 :", font=("궁서",20))
+    idemail_text = Label(wi, text = "이메일 주소:", font=("궁서",20))
+ 
+    idname_input = Entry(wi, font=("궁서",20), bg="skyblue", width=14)
+    idemail_input = Entry(wi, font=("궁서",20), bg="skyblue", width=14)
+    
+    IDsearch_btn = Button(wi, text="아이디 찾기", font=("궁서",20), bg = 'white', command = IDsearch_process)
+
+
+    idname_text.place(x = 20, y = 70)
+    idemail_text.place(x = 20, y = 120)
+    idname_input.place(x = 200, y = 70)
+    idemail_input.place(x = 200, y = 120)
+    
+    IDsearch_btn.place(x = 200, y = 220)
+    
+    wi.mainloop()
+
+#==비밀번호 찾기=========================
+def PWsearch_process():
+    global pwuid_input, pwemail_input, pwrecord, pw
+    uid = pwuid_input.get()
+    email = pwemail_input.get()
+    
+    pwrecord = db_memberSelectPW(uid, email)
+
+#     print(record)
+#     print(record[0])
+
+    showinfo("비밀번호찾기", "비밀번호는 {} 입니다.".format(pwrecord[0]))
+    pw.destroy()
+
+def ui_PWsearch():
+    global pwuid_input, pwemail_input, pwrecord, pw
+    pw = Tk()
+    pw.geometry("450x300")
+    pw.title("비밀번호 찾기")
+
+    pwuid_text = Label(pw, text = "아이디 :", font=("궁서",20))
+    pwemail_text = Label(pw, text = "이메일 주소:", font=("궁서",20))
+ 
+    pwuid_input = Entry(pw, font=("궁서",20), bg="skyblue", width=14)
+    pwemail_input = Entry(pw, font=("궁서",20), bg="skyblue", width=14)
+    
+    PWsearch_btn = Button(pw, text="비밀번호 찾기", font=("궁서",20), bg = 'white', command = PWsearch_process)
+
+
+    pwuid_text.place(x = 20, y = 70)
+    pwemail_text.place(x = 20, y = 120)
+    pwuid_input.place(x = 200, y = 70)
+    pwemail_input.place(x = 200, y = 120)
+    
+    PWsearch_btn.place(x = 200, y = 220)
+    
+    pw.mainloop()
