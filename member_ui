@@ -71,7 +71,7 @@ def ui_membership():
     pw_text = Label(wm, text = "비밀번호:", font=("궁서",20))
     pwcheck_text = Label(wm, text = "비밀번호확인:", font=("궁서",20))
     name_text = Label(wm, text = "이름:", font=("궁서",20))
-    birth_text = Label(wm, text = "생일:", font=("궁서",20))
+    birth_text = Label(wm, text = "생일(6자리):", font=("궁서",20))
     tel_text = Label(wm, text = "전화번호:", font=("궁서",20))
     email_text = Label(wm, text = "이메일 주소:", font=("궁서",20))
     
@@ -116,9 +116,9 @@ def IDsearch_process():
     global idname_input, idemail_input, idrecord, wi
     name = idname_input.get()
     email = idemail_input.get()
-    
+
     idrecord = db_memberSelectID(name, email)
-    
+
     showinfo("아이디찾기", "아이디는 {} 입니다.".format(idrecord[0]))
     wi.destroy()
 
