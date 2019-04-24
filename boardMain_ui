@@ -1,0 +1,46 @@
+from tkinter import *
+from bus_reservation.mypageUI import *
+from bus_reservation.qnaboardUI import *
+
+global uid
+
+w2 = None
+
+def back_boardMain(uid):
+    import bus_reservation.loginMainUI
+    global w2
+    w2.destroy()
+    bus_reservation.loginMainUI.ui_loginMain(uid)
+
+def destroy_boardMain(uid):
+    global w2
+    w2.destroy()
+    ui_mypage(uid)
+
+def destroy_boardMain2(uid):
+    global w2
+    w2.destroy()
+#     qnaList(uid)
+    ui_qnaboardList(uid)
+
+def ui_boardMain(uid):
+    global w2
+
+    w2 = Tk()
+    
+    w2.geometry("400x450")
+    w2.title("이용안내/문의")
+    
+    text_title = Label(w2, text="안녕하세요~ %s님\n\n이용안내/문의 게시판 입니다."%uid, font=("궁서",20), fg="red")
+    
+    mypage = Button(w2, text="마이페이지", font=("궁서",20), bg = 'white', command = lambda:destroy_boardMain(uid))
+    qna = Button(w2, text="Q&A게시판", font=("궁서",20), bg = 'white', command = lambda:destroy_boardMain2(uid))
+    back = Button(w2, text="뒤로가기", font=("궁서",20), bg = 'white', command = lambda:back_boardMain(uid))
+
+    text_title.place(x = 25, y = 15)
+    
+    mypage.place(x = 100, y = 180, w = 180, h = 50)
+    qna.place(x = 100, y = 250, w = 180, h = 50)
+    back.place(x = 100, y = 320, w = 180, h = 50)
+    
+    w2.mainloop()
