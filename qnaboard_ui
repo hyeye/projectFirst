@@ -1,0 +1,109 @@
+from tkinter import *
+from tkinter.messagebox import *
+from bus_reservation.boardDB import *
+from bus_reservation.qnaWriteUI import *
+from bus_reservation.qnaDetailUI import *
+
+global uid
+
+title_input, content_input, bpw_input = None, None, None
+
+wql, total, total2 = None, None, None
+
+
+# ==게시판 전체 List ==================
+def qnaList_titlebtn():
+#     import bus_reservation.qnaDetailUI
+    global wql
+    wql.destroy()
+    qnaDetail_info(uid)
+
+def qnaBack_button(uid):
+    import bus_reservation.boardMainUI
+    global wql
+    wql.destroy()
+    bus_reservation.boardMainUI.ui_boardMain(uid)
+
+def qnaInsert_button(uid):
+    global wql
+#     , total, total2
+#     total2.destroy()
+#     total.destroy()
+    wql.destroy()
+    ui_qnaboardInsert(uid)
+    
+def qnaList_info(uid):
+    global Allresult
+#     print("정보 검색 시작..")
+    #1. db연동해서 결과 받아오는 함수 호출
+    Allresult = db_boardSelectList()
+    #2. 받아온 결과를 UI에 전달.
+#     print(Allresult)
+    qnaboard_window(Allresult)
+#     print(uid)
+#     print(Allresult)
+
+
+def qnaboard_window(Allresult):
+    global wql
+#     ,total, total2
+
+    total = Frame(wql, relief="solid", bd=2)
+    total.pack(side=TOP, fill="both", expand = True, padx=5, pady=5)
+
+    total2 = Frame(total, relief="solid", bd=1)
+    total2.place(x = 30, y = 30, w = 640, h = 450)
+     
+    listNumber = Label(total2, text="번호", font=("궁서",20))
+    listTitle = Label(total2, text="제목", font=("궁서",20))
+    listWriter = Label(total2, text="작성자", font=("궁서",20))
+    listWritedate = Label(total2, text="작성일자", font=("궁서",20))
+    listNumber.grid(row = 0, column = 1)
+    listTitle.grid(row = 0, column = 2)
+    listWriter.grid(row = 0, column = 3)
+    listWritedate.grid(row = 0, column = 4)
+     
+#     print(Allresult[1][0])
+#     print(Allresult[1][1])
+#     print(Allresult[1][2])
+#     print(Allresult[1][3])
+ 
+    start = 1
+ 
+    for record in Allresult:
+        number_text = Label(total2, text=record[0], font=("돋움",20))
+        title_text = Button(total2, text=record[1], font=("돋움",20), width = 11)
+        writer_text = Label(total2, text=record[2], font=("돋움",20))
+        writedate_text = Label(total2, text=record[3], font=("돋움",20))
+         
+        number_text.grid(row = start, column = 1)
+        title_text.grid(row = start, column = 2)
+        writer_text.grid(row = start, column = 3)
+        writedate_text.grid(row = start, column = 4)
+     
+        start = start + 1    
+
+
+def ui_qnaboardList(uid):
+    global wql
+    
+    wql = Tk()
+    wql.geometry("700x600")
+    wql.title("Q&A게시판 목록")
+    
+    qnaList_info(uid)
+
+    
+    backbtn = Button(wql, text="뒤로가기", font=("돋움",20), bg = 'white', command = lambda:qnaBack_button(uid))
+    backbtn.place(x = 70, y = 500)
+    
+    insertbtn = Button(wql, text="글쓰기", font=("돋움",20), bg = 'white', command = lambda:qnaInsert_button(uid))
+    insertbtn.place(x = 530, y = 500)
+    
+    
+    wql.mainloop()
+
+
+if __name__ == '__main__':
+    uid = 'test'
+    ui_qnaboardList(uid)
