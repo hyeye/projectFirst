@@ -36,3 +36,28 @@ def ui_loginMain(uid):
 #     print(uid)
     global w1
     w1 = Tk()
+    
+    w1.geometry("400x450")
+    w1.title("%s님 로그인되었습니다."%uid)
+    
+    icon = PhotoImage(file = "busimg.PNG")
+    label = Label(image = icon)
+    label.image = icon
+    
+    text_title = Label(w1, text="안녕하세요\n고속 버스 예매 시스템입니다.", font=("궁서",20), fg="red")
+    
+    bus = Button(w1, text="버스예매", font=("궁서",20), bg = 'white', command=lambda:busticket(uid))
+    buscheck = Button(w1, text="버스예매확인", font=("궁서",20), bg = 'white', command=lambda:busmod(uid))
+    logout = Button(w1, text="로그아웃", font=("궁서",20), bg = 'white', command = logout_messagebox)
+    info = Button(w1, text="이용안내/문의", font=("궁서",20), bg = 'white', command = lambda:board_process(uid))
+
+    text_title.place(x = 25, y = 15)
+    
+    label.place(x = 20, y = 85)
+    
+    bus.place(x = 20, y = 300, w = 160, h = 50)
+    buscheck.place(x = 195, y = 300, w = 180, h = 50)
+    logout.place(x = 20, y = 370, w = 160, h = 50)
+    info.place(x = 195, y = 370, w = 180, h = 50)
+    
+    w1.mainloop()
