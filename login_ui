@@ -1,0 +1,68 @@
+from tkinter import *
+from tkinter.messagebox import *
+from bus_reservation.memberUI import *
+from bus_reservation.loginMainUI import *
+
+wl = None
+id_input, pw_input = None, None
+login_id = None
+
+# == 로그인 페이지 ==================
+def login_message():
+    global id_input, pw_input, wl, login_id
+
+    login_id = id_input.get()
+    login_pw = pw_input.get()
+             
+    (uid, pw, pwcheck, name, birth, tel, email) = db_memberLogin(login_id)
+#     print(uid, pw, pwcheck, name, birth, tel, email)
+  
+    if uid == login_id:
+        if pw == login_pw:
+            showinfo("로그인 성공 여부", "로그인 성공..!!!!!")
+            wl.destroy()
+            ui_loginMain(uid)
+        else:
+            showinfo("로그인 성공 여부", "로그인 실패.....!! 비밀번호가 틀립니다.")
+    else:
+        showinfo("로그인 성공 여부", "로그인 실패.....!! 존재하지 않는 아이디 입니다..")
+  
+    return (uid, pw, pwcheck, name, birth, tel, email)
+  
+    return login_id
+
+
+def ui_login():
+    global id_input, pw_input, wl
+    
+    wl = Tk()
+    wl.geometry("400x300")
+    wl.title("로그인")
+    
+    text_title = Label(wl, text="로그인", font=("궁서",20))
+    id_text = Label(wl, text = "아이디 :", font=("궁서",20))
+    pw_text = Label(wl, text = "비밀번호:", font=("궁서",20))
+    
+    id_input = Entry(wl, font=("궁서",20), bg="skyblue", width=12)
+    pw_input = Entry(wl, font=("궁서",20), bg="skyblue", width=12)
+    
+    login = Button(wl, text="Login", font=("궁서",20), bg = 'white', command = login_message)
+    membership = Button(wl, text="회원가입", font=(18), command = ui_membership)
+    IDsearch = Button(wl, text="아이디찾기", font=(18), command = ui_IDsearch)
+    PWsearch = Button(wl, text="비밀번호찾기", font=(18), command = ui_PWsearch)
+
+    
+    text_title.pack(fill = X, ipadx = 10, ipady = 10)
+    
+    id_text.place(x = 20, y = 90)
+    pw_text.place(x = 20, y = 140)
+    id_input.place(x = 150, y = 90)
+    pw_input.place(x = 150, y = 140)
+    
+    login.place(x = 150, y = 190, w = 180, h = 50)
+
+    membership.place(x = 50, y = 250)
+    IDsearch.place(x = 130, y = 250)
+    PWsearch.place(x = 230, y = 250)
+
+    wl.mainloop()
