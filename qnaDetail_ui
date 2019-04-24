@@ -1,0 +1,123 @@
+from tkinter import *
+from tkinter.messagebox import *
+from bus_reservation.boardDB import *
+from bus_reservation.qnaboardUI import *
+
+global uid
+
+title_input, content_input, bpw_input = None, None, None
+
+wqd = None
+
+
+# ==게시판 Detail(수정 및 삭제) ====================
+#back
+def qnaBack_process(uid):
+    import bus_reservation.qnaboardUI
+    global wqd
+    wqd.destroy()
+    bus_reservation.qnaboardUI.ui_qnaboardList(uid)
+    
+
+
+#삭제
+def qnaDelete_finish():
+    global wqd
+    showinfo("게시글 삭제", "게시글 삭제완료!")
+    wqd.destroy()
+    ui_qnaboardList(uid)
+
+def qnaDelete_process(uid):
+    global bpw_input
+    
+    bpw = bpw_input
+    
+    db_boardDelete(bpw)
+    
+# 수정
+def qnaUpdate_finish():
+    global wqd
+    showinfo("게시글 수정", "게시글 수정완료!")
+    wqd.destroy()
+    ui_qnaboardList(uid)
+    
+
+def qnaUpdate_process(uid):
+    global title_input, content_input, bpw_input
+    
+    title = title_input
+    content = content_input
+    bpw = bpw_input
+    
+    db_boardUpdate(title, content, bpw)
+
+    
+
+# 게시판 상세보기 페이지
+def qnaDetail_info(uid):
+    global Uptresult
+    print("정보 검색 시작..")
+    print(uid)
+    a = uid
+    writer = a
+    uid = a
+    #1. db연동해서 결과 받아오는 함수 호출
+    Uptresult = db_boardSelectall(writer)
+    #2. 받아온 결과를 UI에 전달.
+    ui_qnaboardDetail(Uptresult)
+    print(Uptresult)
+    print(writer)
+    
+    
+def ui_qnaboardDetail(Uptresult):
+    global title_input, content_input, bpw_input, wqd
+    
+    wqd = Tk()
+    wqd.geometry("700x600")
+    wqd.title("게시판 수정 및 삭제")
+    
+    total = Frame(wqd, relief="solid", bd=2)
+    total.pack(side=TOP, fill="both", expand = True, padx=5, pady=5)
+    
+    cTitle = StringVar(wqd, value = Uptresult[0][0])
+    cContent = StringVar(wqd, value = Uptresult[0][1])
+    cbpw = StringVar(wqd, value = Uptresult[0][2])
+    
+    text_title = Label(wqd, text="제목", font=("궁서",20))
+    text_title.place(x = 40, y = 50)
+    
+    title = Frame(wqd, relief="solid", bd=1)
+    title.place(x = 200, y = 40, w = 450, h = 50)
+    title_input = Entry(wqd, textvariable = cTitle, font=("궁서",20), width=12)
+    title_input.place(x = 200, y = 40, w = 450, h = 50)
+    
+    text_content = Label(wqd, text="내용", font=("궁서",20))
+    text_content.place(x = 40, y = 110)
+    
+    content = Frame(wqd, relief="solid", bd=1)
+    content.place(x = 200, y = 110, w = 450, h = 300)
+    content_input = Entry(wqd, textvariable = cContent, font=("궁서",20), width=12)
+    content_input.place(x = 200, y = 110, w = 450, h = 300)
+    
+    text_bpw = Label(wqd, text="비밀번호", font=("궁서",20))
+    text_bpw.place(x = 40, y = 430)
+    
+    bpw = Frame(wqd, relief="solid", bd=1)
+    bpw.place(x = 200, y = 430, w = 450, h = 50)
+    bpw_input = Entry(wqd, textvariable = cbpw, font=("궁서",20), width=12)
+    bpw_input.place(x = 200, y = 430, w = 450, h = 50)
+    
+    backDetailpage = Button(wqd, text="뒤로가기", font=("궁서",20), bg = 'white', command = lambda:qnaBack_process(uid))
+    backDetailpage.place(x = 100, y = 500)
+    
+    insert = Button(wqd, text="수정", font=("궁서",20), bg = 'white', command = lambda:qnaUpdate_process(uid))
+    insert.place(x = 450, y = 500)
+    
+    delete = Button(wqd, text="삭제", font=("궁서",20), bg = 'white', command = lambda:qnaDelete_process(uid))
+    delete.place(x = 550, y = 500)
+    
+    wqd.mainloop()
+
+# if __name__ == '__main__':
+#     uid = 'test3'
+#     qnaDetail_info(uid)
