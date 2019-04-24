@@ -22,10 +22,11 @@ def qnaBack_process(uid):
 
 #삭제
 def qnaDelete_finish():
+    import bus_reservation.qnaboardUI
     global wqd
     showinfo("게시글 삭제", "게시글 삭제완료!")
     wqd.destroy()
-    ui_qnaboardList(uid)
+    bus_reservation.qnaboardUI.ui_qnaboardList(uid)
 
 def qnaDelete_process(uid):
     global bpw_input
@@ -33,14 +34,13 @@ def qnaDelete_process(uid):
     bpw = bpw_input
     
     db_boardDelete(bpw)
+
+
     
 # 수정
 def qnaUpdate_finish():
-    global wqd
-    showinfo("게시글 수정", "게시글 수정완료!")
-    wqd.destroy()
-    ui_qnaboardList(uid)
-    
+    pass
+
 
 def qnaUpdate_process(uid):
     global title_input, content_input, bpw_input
@@ -51,16 +51,14 @@ def qnaUpdate_process(uid):
     
     db_boardUpdate(title, content, bpw)
 
-    
+    showinfo("게시글 수정", "게시글 수정완료!")
 
 # 게시판 상세보기 페이지
 def qnaDetail_info(uid):
     global Uptresult
     print("정보 검색 시작..")
     print(uid)
-    a = uid
-    writer = a
-    uid = a
+    writer = uid
     #1. db연동해서 결과 받아오는 함수 호출
     Uptresult = db_boardSelectall(writer)
     #2. 받아온 결과를 UI에 전달.
@@ -118,6 +116,6 @@ def ui_qnaboardDetail(Uptresult):
     
     wqd.mainloop()
 
-# if __name__ == '__main__':
-#     uid = 'test3'
-#     qnaDetail_info(uid)
+if __name__ == '__main__':
+    uid = 'test3'
+    qnaDetail_info(uid)
