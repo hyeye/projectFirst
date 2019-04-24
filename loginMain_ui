@@ -29,7 +29,7 @@ def logout_messagebox():
     bus_Main()
 
 def board_process(uid):
-    global wl
+    global w1
     w1.destroy()
     ui_boardMain(uid)
 
