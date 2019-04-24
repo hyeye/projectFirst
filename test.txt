@@ -1,0 +1,70 @@
+http://b1ix.net 으로 블로그를 이전 했습니다.
+
+
+
+
+
+mysql에서 charset 관련해서 흔히 실수하는 부분이 있는데, 해당 테이블의 charset을 지정해놓으면 해당 컬럼도 같은 chatset으로 될꺼라는 생각이다.
+
+안타깝게도.. mysql은 해당 데이터베이스, 테이블, 컬럼 별로 전부 charset을 다르게 지정할 수 있고, 덕분에 하나를 바꾼다고 다른것도 같이 바뀌지도 않는다.
+
+
+
+ 
+
+우선 아래와 같이 하면, 해당 컬럼의 charset을 바꿀수 있다.
+
+
+
+utf-8일때는 utf8 , utf8_general_ci
+
+
+
+ALTER TABLE 테이블명 MODIFY COLUMN 컬럼 VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_general_ci
+
+
+
+euc-kr일때는 euckr , euckr_korean_ci
+
+
+
+그리고 위와 같이 하나하나씩 바꾸기가 귀찮다면, 아래와 같이 해주면, 해당 테이블과 컬럼의 charset이 모두다 원하는 charset으로 변경된다.
+
+
+
+ 
+
+alter table 테이블명 convert to character set utf8;
+
+
+ALTER DATABASE databasename CHARACTER SET utf8 COLLATE utf8_unicode_ci;
+ALTER TABLE tablename CONVERT TO CHARACTER SET utf8 COLLATE utf8_unicode_ci;
+
+
+#------------------
+
+    login_infolist = db_memberLogin(login_id)
+#     print(login_infolist)
+#     print(login_infolist[0][0])
+#     print(login_infolist[0][1])
+#     print(login_infolist[0][2])
+    
+    loginID_list = []
+    
+    for i in range(0, 7, 1):
+        loginID_list.append(login_infolist[0][i])
+        i = i + 1
+#     print(loginID_list)
+
+    uid = loginID_list[0]
+    
+    if login_id not in loginID_list[0]:
+        showinfo("로그인 성공 여부", "로그인 실패.....!! 존재하지 않는 아이디 입니다.")
+    
+    if uid == login_id:
+        if pw == login_pw:
+            showinfo("로그인 성공 여부", "로그인 성공..!!!!!")
+            wl.destroy()
+            ui_loginMain(uid)
+        else:
+            showinfo("로그인 성공 여부", "로그인 실패.....!! 비밀번호가 틀립니다.")
